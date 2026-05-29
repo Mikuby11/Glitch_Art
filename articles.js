@@ -1,3 +1,15 @@
+Aquí está el texto corregido:
+
+// ATENCIÓN, ESTE ES UN COMENTARIO GENERAL PARA TODAS LAS PÁGINAS HECHAS POR MÍ, FDA HUMERES (glitchart.html, glitchbase.html, glitchstudio.html, index.html, naranjo.html, articles.js y style.css)
+
+// Todos los HTML los hice en base a mi conocimiento adquirido en el ramo de "Intro. al Desarrollo Web" donde trabajamos con .js, .json, .html y .css, y trabajamos con bibliotecas y herramientas como webformatter, p5.js y Bootstrap como biblioteca y tutorial de cómo hacer cosas. Es así que el header de la página se ve como una plantilla, pero realmente no lo es, sino que es parte de los tutoriales de Bootstrap y se modificaron todos sus componentes, como color, cantidad de textos y fuentes, a partir de los propósitos que nosotros queríamos lograr. Todo lo que está abajo del header de la página está hecho también a partir de esta biblioteca, como se puede ver por sus containers, etc., pero se hizo en base a lo que yo hice anteriormente en ese ramo en mi propia página web. Aun así, hay algunas cosas en las cuales me ayudé de la IA Claude, más que nada para buscar de una forma más rápida en las herramientas de Bootstrap (ya que aún estoy aprendiendo toda la dimensión de Bootstrap) o para buscar cosas de HTML básicas; básicamente lo usé para que me explicara rápidamente herramientas de Bootstrap o como motor de búsqueda.
+
+// Más abajo dejé también comentarios acerca de cosas puntuales de las que me ayudé de Claude.
+
+// Para este JavaScript principalmente usé mis conocimientos previos en "Intro. al Desarrollo Web". En ese sentido me basé en mi propio archivo .js que hice en ese momento, el cual usé en mi propia página web/portafolio [www.mikuby.cl] para almacenar los datos de los proyectos.
+
+// Lo único aparte es el hecho de que tenemos la aplicación, la cual por orden (y TOC personal) pasé aquí junto al script del GlitchStudio, el cual está destacado con comentarios donde empieza.
+
 const articulos = [
   {
     categoria: "Cultura",

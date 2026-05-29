@@ -1,3 +1,12 @@
+  
+/* ATENCIÓN, ESTE ES UN COMENTARIO GENERAL PARA TODAS LAS PÁGINAS HECHAS POR MÍ, FDA HUMERES (glitchart.html, glitchbase.html, glitchstudio.html, index.html, naranjo.html, articles.js y style.css)
+
+Todos los HTML los hice en base a mi conocimiento adquirido en el ramo de "Intro. al Desarrollo Web" donde trabajamos con .js, .json, .html y .css, y trabajamos con bibliotecas y herramientas como webformatter, p5.js y Bootstrap como biblioteca y tutorial de cómo hacer cosas. Es así que el header de la página se ve como una plantilla, pero realmente no lo es, sino que es parte de los tutoriales de Bootstrap y se modificaron todos sus componentes, como color, cantidad de textos y fuentes, a partir de los propósitos que nosotros queríamos lograr. Todo lo que está abajo del header de la página está hecho también a partir de esta biblioteca, como se puede ver por sus containers, etc., pero se hizo en base a lo que yo hice anteriormente en ese ramo en mi propia página web. Aun así, hay algunas cosas en las cuales me ayudé de la IA Claude, más que nada para buscar de una forma más rápida en las herramientas de Bootstrap (ya que aún estoy aprendiendo toda la dimensión de Bootstrap) o para buscar cosas de HTML básicas; básicamente lo usé para que me explicara rápidamente herramientas de Bootstrap o como motor de búsqueda.
+
+Más abajo dejé también comentarios acerca de cosas puntuales de las que me ayudé de Claude. */
+
+/*A partir de aquí es CSS propiamente de bootstrap el cual se separó de la página base de esta */
+
   .blog-header-logo { font-family: "Playfair Display", Georgia, "Times New Roman", serif; font-size: 2.25rem; }
             .blog-post { margin-bottom: 4rem; }
             .blog-post-title { font-size: 2.5rem; }
@@ -49,8 +58,10 @@
             .bd-mode-toggle .bi { width: 1em; height: 1em; }
             .bd-mode-toggle .dropdown-menu .active .bi { display: block !important; }
 
+/*a partir de aqui es css generado propio */
+
             .parrafo-1 { 
-                color: #ff0000 !important; /* rojo */
+                color: #ff0000 !important; /* rojo */ /*en el caso del !important yo (Humeres) lo sabia usar, pero como tambien mi compañera Sofia Rodriguez (quien hizo las otras 6 paginas pequeñas) manipulo esta seccion del html ella le pregunto a Claude como forzar el color nuestro por sobre el de Bootstrap como biblioteca a lo que me dijo que Claude le dio esta alternativa, a lo cual yo se lo confirme por mi uso previo */
             }
             .parrafo-2 { 
                 color: #ffff00 !important; /* amarillo */
@@ -217,7 +228,7 @@
     text-decoration: underline; 
 }
 
-/* ── GLITCH STUDIO ── */
+/* ── GLITCH STUDIO ── */ /* a partir de aqui es codigo generado por la IA y mi compañera M. Arancibia el cual yo expropie a nuestro style.css por orden */
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;700&display=swap');
 
 #glitch-studio-wrapper {
