@@ -1,552 +1,219 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GLITCH STUDIO</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;700&display=swap');
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Glitch Art - Group 1</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+            crossorigin="anonymous"
+        />
+        <link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900&display=swap" rel="stylesheet" />
+        <link href="style.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+    </head>
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    <body>
+        <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+            <symbol id="check2" viewBox="0 0 16 16">
+                <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"></path>
+            </symbol>
+            <symbol id="circle-half" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"></path>
+            </symbol>
+            <symbol id="moon-stars-fill" viewBox="0 0 16 16">
+                <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"></path>
+                <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"></path>
+            </symbol>
+            <symbol id="sun-fill" viewBox="0 0 16 16">
+                <path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"></path>
+            </symbol>
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+            <symbol id="aperture" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74-9.94M9.69 16L3.95 6.06M14.31 16H2.83m13.79-4l-5.74 9.94"></path>
+            </symbol>
+            <symbol id="cart" viewBox="0 0 16 16">
+                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"></path>
+            </symbol>
+            <symbol id="chevron-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"></path>
+            </symbol>
+        </svg>
 
-  :root {
-    --panel: #111416;
-    --panel2: #1a1e22;
-    --accent: #00ffe0;
-    --accent2: #ff2d6b;
-    --accent3: #ffe600;
-    --text: #c8d6db;
-    --muted: #4a5a62;
-    --btn: #1e2528;
-    --btn-hover: #2a3338;
-    --border: #2a3338;
-  }
+        <div class="container">
+            <header class="border-bottom lh-1 py-3">
+                <div class="row flex-nowrap justify-content-between align-items-center">
+                    <div class="col-4 pt-1"><a class="link-secondary" href="#">Subscribete</a></div>
+                    <div class="col-4 text-center">
+                        <a class="blog-header-logo text-body-emphasis text-decoration-none" href="index.html">Freak Magazine
+                    </div>
+                </div>
+            </header>
+            <div class="nav-scroller py-1 mb-3 border-bottom">
+                <nav class="nav nav-underline justify-content-between">
+                    <a class="nav-item nav-link link-body-emphasis parrafo-9 font-monospace" href="#">Mundo</a>
+                    <a class="nav-item nav-link link-body-emphasis parrafo-9 font-monospace" href="#">Sociedad</a>
+                    <a class="nav-item nav-link link-body-emphasis parrafo-9 font-monospace" href="#">Tecnología</a>
+                    <a class="nav-item nav-link link-body-emphasis parrafo-9 font-monospace" href="#">Diseño</a>
+                    <a class="nav-item nav-link link-body-emphasis parrafo-9 font-monospace" href="#">Cultura</a>
+                    <a class="nav-item nav-link link-body-emphasis parrafo-9 font-monospace" href="#">Arte</a>
+                    <a class="nav-item nav-link link-body-emphasis parrafo-9 font-monospace" href="#">Juegos</a>
+                    <a class="nav-item nav-link link-body-emphasis parrafo-9 font-monospace" href="#">Moda</a>
+                </nav>
+            </div>
+        </div>
+        <main class="container">
+            <div class="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary font-monospace" style="position: relative; overflow: hidden;">
+                <h1 class="display-3 fw-bold text-center parrafo-9" style="position: relative; z-index: 1;">¿Cómo hacer un glitch?</h1>
+                <img src="img\TIT.VERDEAGUA.gif" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;" alt="glitchglitch">
+            </div>
+        </main>
 
-  body {
-    display: flex;
-    height: 100vh;
-    overflow: hidden;
-    background: #0a0c0e;
-    font-family: 'Share Tech Mono', monospace;
-    color: var(--text);
-  }
+<!-- aqui quiero poner un div con la app del glitch studio -->
+<div class="container my-4">
+  <input type="file" id="gs-fileInput" accept="image/*">
+  <div id="glitch-studio-wrapper">
 
-  /* ── PANEL IZQUIERDO ── */
-  #sidebar {
-    width: 220px;
-    min-width: 220px;
-    background: var(--panel);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    z-index: 10;
-  }
+    <div id="gs-sidebar">
+      <div class="gs-sidebar-header">
+        <h2>GLITCH STUDIO</h2>
+        <p>WEB EDITION</p>
+      </div>
 
-  #sidebar::-webkit-scrollbar { width: 4px; }
-  #sidebar::-webkit-scrollbar-track { background: var(--panel); }
-  #sidebar::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 2px; }
+      <div class="gs-section">
+        <div class="gs-section-label">// ARCHIVO</div>
+        <div class="gs-btn-grid single">
+          <button class="gs-primary gs-btn-main" onclick="gsImportarImagen()">▲ IMPORTAR <small>(I)</small></button>
+        </div>
+      </div>
 
-  .sidebar-header {
-    padding: 18px 16px 12px;
-    border-bottom: 1px solid var(--border);
-  }
+      <div class="gs-section">
+        <div class="gs-section-label">// PINCELES</div>
+        <div class="gs-btn-grid">
+          <button onclick="gsTrazoCruz()">CRUZ <small>(K)</small></button>
+          <button onclick="gsTrazoCirculo()">CÍRCULO <small>(C)</small></button>
+        </div>
+      </div>
 
-  .sidebar-header h1 {
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
-    letter-spacing: 3px;
-    color: var(--accent);
-    text-shadow: 0 0 12px rgba(0,255,224,0.4);
-  }
+      <div class="gs-section">
+        <div class="gs-section-label">// EFECTOS</div>
+        <div class="gs-btn-grid single">
+          <button onclick="gsEcoHorizontal()">ECO HORIZONTAL <small>(H)</small></button>
+          <button onclick="gsRgbSplit()">RGB SPLIT <small>(R)</small></button>
+          <button onclick="gsCambiarColor()">CORRUPCIÓN <small>(D)</small></button>
+        </div>
+      </div>
 
-  .sidebar-header p {
-    font-size: 9px;
-    color: var(--muted);
-    letter-spacing: 2px;
-    margin-top: 3px;
-  }
+      <div class="gs-section">
+        <div class="gs-section-label">// GLITCH EJES</div>
+        <div class="gs-btn-grid">
+          <button onclick="gsGlitchHorizontal()">EJE X <small>(A)</small></button>
+          <button onclick="gsGlitchVertical()">EJE Y <small>(S)</small></button>
+        </div>
+      </div>
 
-  .section {
-    padding: 10px 12px 6px;
-    border-bottom: 1px solid var(--border);
-  }
+      <div class="gs-section">
+        <div class="gs-section-label">// PIXEL SORTING</div>
+        <div class="gs-btn-grid">
+          <button onclick="gsSortH()">HORIZ. <small>(P)</small></button>
+          <button onclick="gsSortV()">VERT. <small>(V)</small></button>
+        </div>
+      </div>
 
-  .section-label {
-    font-size: 9px;
-    letter-spacing: 2px;
-    color: var(--muted);
-    margin-bottom: 8px;
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 700;
-  }
+      <div class="gs-section">
+        <div class="gs-section-label">// PARÁMETROS</div>
+        <div class="gs-slider-row">
+          <label>INTENSIDAD X <span id="gs-valH">20</span></label>
+          <input type="range" id="gs-sliderH" min="0" max="100" value="20">
+        </div>
+        <div class="gs-slider-row">
+          <label>INTENSIDAD Y <span id="gs-valV">20</span></label>
+          <input type="range" id="gs-sliderV" min="0" max="100" value="20">
+        </div>
+        <div class="gs-slider-row">
+          <label>UMBRAL SORT <span id="gs-valU">100</span></label>
+          <input type="range" id="gs-sliderU" min="0" max="510" value="100">
+        </div>
+      </div>
 
-  .btn-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 5px;
-  }
-
-  .btn-grid.single { grid-template-columns: 1fr; }
-
-  button {
-    background: var(--btn);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px;
-    padding: 7px 6px;
-    cursor: pointer;
-    letter-spacing: 1px;
-    transition: all 0.15s ease;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  button:hover { border-color: var(--accent); color: var(--accent); }
-  button:active { transform: scale(0.97); }
-
-  /* ESTILO UNIFICADO PARA LOS BOTONES PRINCIPALES ABAJO E IMPORTAR */
-  .btn-main {
-    grid-column: 1 / -1;
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 700;
-    font-size: 12px;
-    letter-spacing: 2px;
-    padding: 10px;
-    margin-bottom: 4px;
-  }
-
-  button.primary {
-    background: #0d2420;
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-  button.primary:hover { background: #143028; box-shadow: 0 0 14px rgba(0,255,224,0.2); }
-
-  button.warn {
-    background: #1e1900;
-    border-color: var(--accent3);
-    color: var(--accent3);
-  }
-  button.warn:hover { background: #2a2400; box-shadow: 0 0 12px rgba(255,230,0,0.15); }
-
-  button.danger {
-    background: #1e0d13;
-    border-color: var(--accent2);
-    color: var(--accent2);
-    margin-bottom: 0;
-  }
-  button.danger:hover { background: #2a1020; box-shadow: 0 0 14px rgba(255,45,107,0.2); }
-
-  /* ── SLIDERS ── */
-  .slider-row { margin-bottom: 10px; }
-  .slider-row label {
-    display: flex;
-    justify-content: space-between;
-    font-size: 9px;
-    color: var(--muted);
-    letter-spacing: 1px;
-    margin-bottom: 4px;
-  }
-  .slider-row label span { color: var(--accent); }
-  input[type=range] { -webkit-appearance: none; width: 100%; height: 3px; background: var(--border); outline: none; }
-  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); cursor: pointer; }
-
-  /* ── CANVAS AREA ── */
-  #canvas-area { flex: 1; position: relative; overflow: hidden; background: #0a0c0e; }
-  #canvas-area canvas { display: block; }
-  #drop-hint { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
-  .border-box { border: 1px dashed var(--border); padding: 30px; text-align: center; }
-  .big { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: 6px; color: var(--muted); }
-  .small { font-size: 10px; letter-spacing: 3px; color: #2a3338; margin-top: 8px; }
-
-  #status-bar {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    background: rgba(17,20,22,0.85);
-    border-top: 1px solid var(--border);
-    padding: 5px 16px;
-    font-size: 9px;
-    color: var(--muted);
-    display: flex;
-    gap: 20px;
-  }
-  #status-bar span { color: var(--accent); }
-  #fileInput { display: none; }
-</style>
-</head>
-<body>
-
-<!-- Se usó el código de glitchology.com/processing/ en el entorno de Processing .Para entender el algoritmo, crear interfaz de Glitch Studio y corregir detalles se ocupó 
-las IAs de Claude, Gemini y Github. Para hacerlo compatible con página web se pidió a la IA Claude que pasara el código original del programa a HTML, ocupando la biblioteca de 
-P5.js (JabaScript) para procesar imagenes y desarrolar el algoritmo de cada herramienta. -->
-
-<input type="file" id="fileInput" accept="image/*">
-
-<div id="sidebar">
-  <div class="sidebar-header">
-    <h1>GLITCH STUDIO</h1>
-    <p>WEB EDITION</p>
-  </div>
-
-  <div class="section">
-    <div class="section-label">// ARCHIVO</div>
-    <div class="btn-grid single">
-      <button class="primary btn-main" onclick="importarImagen()">▲ IMPORTAR <small>(I)</small></button>
+      <div class="gs-section">
+        <div class="gs-btn-grid single">
+          <button class="gs-primary gs-btn-main" onclick="gsDeshacer()">↶ DESHACER <small>(Z)</small></button>
+          <button class="gs-warn gs-btn-main" onclick="gsReiniciar()">↺ REINICIAR <small>(G)</small></button>
+          <button class="gs-danger gs-btn-main" onclick="gsExportarImagen()">▼ EXPORTAR <small>(E)</small></button>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="section">
-    <div class="section-label">// PINCELES</div>
-    <div class="btn-grid">
-      <button onclick="trazoCruz()">CRUZ <small>(K)</small></button>
-      <button onclick="trazoCirculo()">CÍRCULO <small>(C)</small></button>
+    <div id="gs-canvas-area">
+      <div id="gs-drop-hint">
+        <div class="gs-border-box">
+          <div class="gs-big">SIN IMAGEN</div>
+          <div class="gs-small">IMPORTA UNA IMAGEN PARA EMPEZAR</div>
+        </div>
+      </div>
+      <div id="gs-status-bar">
+        <span id="gs-st-size">—</span>
+        <span id="gs-st-zoom">ZOOM 70%</span>
+        <span id="gs-st-pos">X:— Y:—</span>
+      </div>
     </div>
-  </div>
 
-  <div class="section">
-    <div class="section-label">// EFECTOS</div>
-    <div class="btn-grid single">
-      <button onclick="ecoHorizontal()">ECO HORIZONTAL <small>(H)</small></button>
-      <button onclick="rgbSplit()">RGB SPLIT <small>(R)</small></button>
-      <button onclick="cambiarColor()">CORRUPCIÓN <small>(D)</small></button>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-label">// GLITCH EJES</div>
-    <div class="btn-grid">
-      <button onclick="glitchHorizontal()">EJE X <small>(A)</small></button>
-      <button onclick="glitchVertical()">EJE Y <small>(S)</small></button>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-label">// PIXEL SORTING</div>
-    <div class="btn-grid">
-      <button onclick="sortH()">HORIZ. <small>(P)</small></button>
-      <button onclick="sortV()">VERT. <small>(V)</small></button>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-label">// PARÁMETROS</div>
-    <div class="slider-row">
-      <label>INTENSIDAD X <span id="valH">20</span></label>
-      <input type="range" id="sliderH" min="0" max="100" value="20" oninput="porcenH=+this.value; document.getElementById('valH').textContent=this.value">
-    </div>
-    <div class="slider-row">
-      <label>INTENSIDAD Y <span id="valV">20</span></label>
-      <input type="range" id="sliderV" min="0" max="100" value="20" oninput="porcenV=+this.value; document.getElementById('valV').textContent=this.value">
-    </div>
-    <div class="slider-row">
-      <label>UMBRAL SORT <span id="valU">100</span></label>
-      <input type="range" id="sliderU" min="0" max="510" value="100" oninput="umbralSort=+this.value; document.getElementById('valU').textContent=this.value">
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="btn-grid single">
-      <button class="primary btn-main" onclick="deshacer()">↶ DESHACER <small>(Z)</small></button>
-      <button class="warn btn-main" onclick="reiniciar()">↺ REINICIAR <small>(G)</small></button>
-      <button class="danger btn-main" onclick="exportarImagen()">▼ EXPORTAR <small>(E)</small></button>
-    </div>
   </div>
 </div>
 
-<div id="canvas-area">
-  <div id="drop-hint">
-    <div class="border-box">
-      <div class="big">SIN IMAGEN</div>
-      <div class="small">IMPORTA UNA IMAGEN PARA EMPEZAR</div>
-    </div>
-  </div>
-  <div id="status-bar">
-    <span id="st-size">—</span>
-    <span id="st-zoom">ZOOM 70%</span>
-    <span id="st-pos">X:— Y:—</span>
-  </div>
-</div>
+      <main class="container">
+            <div class="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary font-monospace" style="position: relative; overflow: hidden;">
+                <h1 class="display-3 fw-bold text-center parrafo-9" style="position: relative; z-index: 1;">Proceso GlitchStudio</h1>
+                <img src="img\TIT.VERDEAGUA.gif" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;" alt="glitchglitch">
+            </div>
+        </main>
 
-<script>
-// --- RECUPERACIÓN DE TU LÓGICA ORIGINAL COMPLETA ---
-let imgOriginal = null, lienzo = null, listo = false, historial = [];
-let porcenH = 20, porcenV = 20, umbralSort = 100;
-let zoom = 0.7, offsetX = 0, offsetY = 0;
-let moviendo = false, clicX = 0, clicY = 0;
+        <main class="container">
+            <h3 class="display-6 fw-bold text-left parrafo-9 font-monospace">Proccesing</h3>
+            <div class="p-md-3 mb-4 rounded text-body-emphasis">
+                <p class="lead my-3 parrafo-9 font-monospace">Es un entorno de desarrollo de código abierto diseñado para que artistas y diseñadores creen arte visual digital y animaciones de forma sencilla. Utiliza el lenguaje de programación Java, simplificando su estructura para permitir una experimentación rápida a través de archivos llamados "bocetos" (sketches).</p>
+                <p class="lead my-3 parrafo-9 font-monospace">Por otro lado, p5.js es la biblioteca oficial de Processing creada específicamente para la web; traslada toda la filosofía y funciones de dibujo e interacción de Processing al lenguaje JavaScript, lo que permite ejecutar los proyectos directamente en cualquier navegador de internet sin necesidad de complementos.</p>
 
-const area = document.getElementById('canvas-area');
-const hint = document.getElementById('drop-hint');
-const canvas = document.createElement('canvas');
-const ctx = canvas.getContext('2d');
-area.insertBefore(canvas, area.firstChild);
+            <img src="img/processing.png" class="img-fluid" alt="glitchglitch">
+            <br>
+            <br>
+            <br>
+            <br>
 
-function resizeCanvas() {
-  canvas.width = area.clientWidth;
-  canvas.height = area.clientHeight;
-  render();
-}
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
-offsetX = canvas.width / 2; offsetY = canvas.height / 2;
+            <h3 class="display-6 fw-bold text-left parrafo-9 font-monospace">Interfaz y otras utilidades</h3>
+            <div class="p-md-3 mb-4 rounded text-body-emphasis">
+                <p class="lead my-3 parrafo-9 font-monospace">El primer prototipo funcionaba cambiando variables en el mismo código, de forma manual y tardada. Para hacer una demostración visual se usó la IA de Claude y Gemini para la creación de nuevas herramientas, conversión a HTML y entender la lógica de lo que se estaba implementando en cada corrección.</p>
+            </div>
+            <img src="img/interfaz.png" class="img-fluid d-block ms-auto" alt="glitchglitch">
+        </main>
 
-function render() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  if (!listo || !lienzo) return;
-  ctx.save();
-  ctx.translate(offsetX, offsetY);
-  ctx.scale(zoom, zoom);
-  ctx.drawImage(lienzo, -lienzo.width / 2, -lienzo.height / 2);
-  ctx.restore();
-  document.getElementById('st-zoom').textContent = 'ZOOM ' + Math.round(zoom * 100) + '%';
-}
+        <div class="w-100">
+            <a href="glitchartbase.html">
+                <img src="img\GALLINA.gif" style="width:100%; display:block; object-fit:cover;" alt="glitchglitch">
+            </a>
+        </div>
 
-function guardarHistorial() {
-  if (!lienzo) return;
-  historial.push(cloneCanvas(lienzo));
-  if (historial.length > 20) historial.shift();
-}
-
-function deshacer() {
-  if (historial.length === 0) return;
-  lienzo = historial.pop();
-  render();
-}
-
-function cloneCanvas(src) {
-  const oc = document.createElement('canvas');
-  oc.width = src.width; oc.height = src.height;
-  oc.getContext('2d').drawImage(src, 0, 0);
-  return oc;
-}
-
-function importarImagen() { document.getElementById('fileInput').click(); }
-
-document.getElementById('fileInput').addEventListener('change', function() {
-  const file = this.files[0]; if (!file) return;
-  const url = URL.createObjectURL(file);
-  const img = new Image();
-  img.onload = () => {
-    let w = img.width, h = img.height;
-    if (w > 2000) { h = Math.round(h * 1800 / w); w = 1800; }
-    const oc = document.createElement('canvas'); oc.width = w; oc.height = h;
-    oc.getContext('2d').drawImage(img, 0, 0, w, h);
-    imgOriginal = oc;
-    lienzo = cloneCanvas(oc);
-    listo = true; historial = [];
-    hint.style.display = 'none';
-    render();
-    document.getElementById('st-size').textContent = w + '×' + h + 'px';
-  };
-  img.src = url;
-});
-
-function exportarImagen() {
-  if (!listo) return;
-  const a = document.createElement('a');
-  a.download = 'glitch-' + Date.now() + '.png';
-  a.href = lienzo.toDataURL('image/png');
-  a.click();
-}
-
-function reiniciar() {
-  if (!imgOriginal) return;
-  guardarHistorial();
-  lienzo = cloneCanvas(imgOriginal);
-  render();
-}
-
-// --- UTILIDADES DE PIXELES ORIGINALES ---
-function getOffscreen() {
-  const oc = document.createElement('canvas');
-  oc.width = lienzo.width; oc.height = lienzo.height;
-  const ox = oc.getContext('2d');
-  ox.drawImage(lienzo, 0, 0);
-  return { oc, ox };
-}
-function commitOffscreen(oc) { guardarHistorial(); lienzo = oc; render(); }
-
-// --- TUS EFECTOS ORIGINALES ---
-function trazoCruz() {
-  if (!listo) return;
-  const { oc, ox } = getOffscreen();
-  const id = ox.getImageData(0,0,oc.width,oc.height); const d = id.data;
-  const W = oc.width, H = oc.height;
-  const iter = Math.round(lerp(50, 1000, porcenV / 100));
-  const len = Math.round(lerp(10, 300, porcenH / 100));
-  for (let i = 0; i < iter; i++) {
-    const x = randi(W), y = randi(H);
-    const si = (x + y * W) * 4;
-    const r = d[si], g = d[si+1], b = d[si+2], a = d[si+3];
-    for (let j = -len/2; j < len/2; j++) {
-      const xj = x + j | 0; if (xj >= 0 && xj < W) { const t = (xj + y * W) * 4; d[t]=r; d[t+1]=g; d[t+2]=b; d[t+3]=a; }
-      const yj = y + j | 0; if (yj >= 0 && yj < H) { const t = (x + yj * W) * 4; d[t]=r; d[t+1]=g; d[t+2]=b; d[t+3]=a; }
-    }
-  }
-  ox.putImageData(id, 0, 0); commitOffscreen(oc);
-}
-
-function trazoCirculo() {
-  if (!listo) return;
-  const { oc, ox } = getOffscreen();
-  const iter = Math.round(lerp(10, 200, porcenV / 100));
-  const r = Math.round(lerp(5, 150, porcenH / 100));
-  const id = ox.getImageData(0,0,oc.width,oc.height).data;
-  for (let i = 0; i < iter; i++) {
-    const x = randi(oc.width), y = randi(oc.height);
-    const si = (x + y * oc.width) * 4;
-    ox.strokeStyle = `rgb(${id[si]},${id[si+1]},${id[si+2]})`;
-    ox.lineWidth = 2; ox.beginPath(); ox.ellipse(x, y, r, r, 0, 0, Math.PI * 2); ox.stroke();
-  }
-  commitOffscreen(oc);
-}
-
-function ecoHorizontal() {
-  if (!listo) return;
-  const { oc, ox } = getOffscreen();
-  const id = ox.getImageData(0,0,oc.width,oc.height); const d = id.data;
-  const copia = new Uint8ClampedArray(d);
-  const dist = Math.round(lerp(0, 500, porcenH / 100));
-  const f = porcenV / 100;
-  for (let i = 0; i < d.length; i += 4) {
-    const px = (i / 4) % oc.width;
-    if (px - dist >= 0) {
-      const ei = i - dist * 4;
-      d[i] += (copia[ei] - d[i]) * f;
-      d[i+1] += (copia[ei+1] - d[i+1]) * f;
-      d[i+2] += (copia[ei+2] - d[i+2]) * f;
-    }
-  }
-  ox.putImageData(id, 0, 0); commitOffscreen(oc);
-}
-
-function rgbSplit() {
-  if (!listo) return;
-  const { oc, ox } = getOffscreen();
-  const id = ox.getImageData(0,0,oc.width,oc.height); const d = id.data;
-  const copia = new Uint8ClampedArray(d);
-  const off = Math.round(lerp(0, 150, porcenH / 100));
-  for (let y = 0; y < oc.height; y++) {
-    for (let x = 0; x < oc.width; x++) {
-      const loc = (x + y * oc.width) * 4;
-      const locR = Math.min(oc.width - 1, x + off) + y * oc.width << 2;
-      const locB = Math.max(0, x - off) + y * oc.width << 2;
-      d[loc] = copia[locR]; d[loc+2] = copia[locB+2];
-    }
-  }
-  ox.putImageData(id, 0, 0); commitOffscreen(oc);
-}
-
-function cambiarColor() {
-  if (!listo) return;
-  const { oc, ox } = getOffscreen();
-  const id = ox.getImageData(0,0,oc.width,oc.height); const d = id.data;
-  const intensity = lerp(0, 255, porcenH / 100);
-  for (let i = 0; i < d.length; i += 4) {
-    if (Math.random() * 100 < porcenV) {
-      d[i] = (d[i] + intensity) % 256;
-      d[i+2] = (d[i+2] + intensity / 2) % 256;
-    }
-  }
-  ox.putImageData(id, 0, 0); commitOffscreen(oc);
-}
-
-function glitchHorizontal() {
-  if (!listo) return;
-  const { oc, ox } = getOffscreen();
-  const h = Math.round(lerp(1, 50, porcenV / 100));
-  const w = Math.round(lerp(10, oc.width, porcenH / 100));
-  for (let i = 0; i < 20; i++) {
-    const x = randi(oc.width), y = randi(oc.height);
-    const dx = Math.round(Math.random() * 100 - 50);
-    ox.drawImage(oc, x, y, w, h, x + dx, y, w, h);
-  }
-  commitOffscreen(oc);
-}
-
-function glitchVertical() {
-  if (!listo) return;
-  const { oc, ox } = getOffscreen();
-  const w = Math.round(lerp(1, 50, porcenH / 100));
-  const h = Math.round(lerp(10, oc.height, porcenV / 100));
-  for (let i = 0; i < 20; i++) {
-    const x = randi(oc.width), y = randi(oc.height);
-    const dy = Math.round(Math.random() * 100 - 50);
-    ox.drawImage(oc, x, y, w, h, x, y + dy, w, h);
-  }
-  commitOffscreen(oc);
-}
-
-function sortH() { if (listo) sorting(true); }
-function sortV() { if (listo) sorting(false); }
-
-function sorting(horiz) {
-  const { oc, ox } = getOffscreen();
-  const id = ox.getImageData(0,0,oc.width,oc.height); const d = id.data;
-  const W = oc.width, H = oc.height;
-  for (let i = 0; i < (horiz ? H : W); i++) {
-    if (Math.random() * 100 < 50) {
-      if (horiz) sortRow(d, i, W); else sortCol(d, i, W, H);
-    }
-  }
-  ox.putImageData(id, 0, 0); commitOffscreen(oc);
-}
-
-function getPixelBrightness(d, idx) {
-  const i = idx * 4; return d[i] * 0.299 + d[i+1] * 0.587 + d[i+2] * 0.114;
-}
-
-function sortRow(d, y, W) {
-  let x = 0;
-  while (x < W) {
-    let start = x; while (start < W && getPixelBrightness(d, start + y * W) <= umbralSort / 2) start++;
-    if (start >= W) break;
-    let end = start + 1; while (end < W && getPixelBrightness(d, end + y * W) > umbralSort / 2) end++;
-    const seg = [];
-    for (let i = start; i < end; i++) { const idx = (i + y * W) * 4; seg.push([d[idx], d[idx+1], d[idx+2], d[idx+3]]); }
-    seg.sort((a, b) => (a[0]*0.299+a[1]*0.587+a[2]*0.114) - (b[0]*0.299+b[1]*0.587+b[2]*0.114));
-    for (let i = 0; i < seg.length; i++) { const idx = (start + i + y * W) * 4; d[idx]=seg[i][0]; d[idx+1]=seg[i][1]; d[idx+2]=seg[i][2]; d[idx+3]=seg[i][3]; }
-    x = end;
-  }
-}
-
-function sortCol(d, x, W, H) {
-  let y = 0;
-  while (y < H) {
-    let start = y; while (start < H && getPixelBrightness(d, x + start * W) <= umbralSort / 2) start++;
-    if (start >= H) break;
-    let end = start + 1; while (end < H && getPixelBrightness(d, x + end * W) > umbralSort / 2) end++;
-    const seg = [];
-    for (let i = start; i < end; i++) { const idx = (x + i * W) * 4; seg.push([d[idx], d[idx+1], d[idx+2], d[idx+3]]); }
-    seg.sort((a, b) => (a[0]*0.299+a[1]*0.587+a[2]*0.114) - (b[0]*0.299+b[1]*0.587+b[2]*0.114));
-    for (let i = 0; i < seg.length; i++) { const idx = (x + (start + i) * W) * 4; d[idx]=seg[i][0]; d[idx+1]=seg[i][1]; d[idx+2]=seg[i][2]; d[idx+3]=seg[i][3]; }
-    y = end;
-  }
-}
-
-// --- NAVEGACIÓN Y TECLADO ---
-canvas.addEventListener('wheel', e => { e.preventDefault(); zoom = Math.min(8, Math.max(0.05, zoom - e.deltaY * 0.001)); render(); }, { passive: false });
-canvas.addEventListener('mousedown', e => { moviendo = true; clicX = e.clientX - 220 - offsetX; clicY = e.clientY - offsetY; });
-canvas.addEventListener('mousemove', e => { if (moviendo) { offsetX = e.clientX - 220 - clicX; offsetY = e.clientY - clicY; render(); } });
-window.addEventListener('mouseup', () => moviendo = false);
-
-document.addEventListener('keydown', e => {
-  if (e.target.tagName === 'INPUT') return;
-  const k = e.key.toLowerCase();
-  if (k === 'i') importarImagen(); else if (k === 'e') exportarImagen();
-  else if (k === 'g') reiniciar(); else if (k === 'z') deshacer();
-  else if (k === 'k') trazoCruz(); else if (k === 'c') trazoCirculo();
-  else if (k === 'h') ecoHorizontal(); else if (k === 'r') rgbSplit();
-  else if (k === 'a') glitchHorizontal(); else if (k === 's') glitchVertical();
-  else if (k === 'd') cambiarColor(); else if (k === 'p') sortH(); else if (k === 'v') sortV();
-});
-
-function lerp(a, b, t) { return a + (b - a) * t; }
-function randi(n) { return Math.floor(Math.random() * n); }
-</script>
-</body>
+        <footer class="py-5 text-body-secondary bg-body-tertiary">
+           <div class="p-4">
+                            <h4 class="fst-italic font-monospace">Nuestras redes</h4>
+                            <ol class="list-unstyled font-monospace">
+                                <li><a href="#">GitHub</a></li>
+                                <li><a href="#">Canvas</a></li>
+                                <li><a href="#">Drive</a></li>
+                            </ol>
+                        </div>
+            <p class="p-4 mb-2 font-monospace"><a href="#">Back to top</a></p>
+        </footer>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc4s9bIOgUxi8T/jzmLLrKkNyL1ql4c3oJUXXlZS7vN"
+            crossorigin="anonymous"
+        ></script>
+        <script src="articles.js"></script>
+    </body>
 </html>

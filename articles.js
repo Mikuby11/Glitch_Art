@@ -101,3 +101,319 @@ function informacionArticulos() {
 }
 
 document.addEventListener("DOMContentLoaded", informacionArticulos);
+
+// ── GLITCH STUDIO ──
+(function () {
+  let imgOriginal = null, lienzo = null, listo = false, historial = [];
+  let porcenH = 20, porcenV = 20, umbralSort = 100;
+  let zoom = 0.7, offsetX = 0, offsetY = 0;
+  let moviendo = false, clicX = 0, clicY = 0;
+
+  const area = document.getElementById('gs-canvas-area');
+  if (!area) return; // no está en esta página
+
+  const hint = document.getElementById('gs-drop-hint');
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  area.insertBefore(canvas, area.firstChild);
+
+  function resizeCanvas() {
+    canvas.width = area.clientWidth;
+    canvas.height = area.clientHeight;
+    render();
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+  offsetX = canvas.width / 2; offsetY = canvas.height / 2;
+
+  function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (!listo || !lienzo) return;
+    ctx.save();
+    ctx.translate(offsetX, offsetY);
+    ctx.scale(zoom, zoom);
+    ctx.drawImage(lienzo, -lienzo.width / 2, -lienzo.height / 2);
+    ctx.restore();
+    document.getElementById('gs-st-zoom').textContent = 'ZOOM ' + Math.round(zoom * 100) + '%';
+  }
+
+  function guardarHistorial() {
+    if (!lienzo) return;
+    historial.push(cloneCanvas(lienzo));
+    if (historial.length > 20) historial.shift();
+  }
+
+  function deshacer() {
+    if (historial.length === 0) return;
+    lienzo = historial.pop();
+    render();
+  }
+
+  function cloneCanvas(src) {
+    const oc = document.createElement('canvas');
+    oc.width = src.width; oc.height = src.height;
+    oc.getContext('2d').drawImage(src, 0, 0);
+    return oc;
+  }
+
+  window.gsImportarImagen = function () { document.getElementById('gs-fileInput').click(); };
+
+  document.getElementById('gs-fileInput').addEventListener('change', function () {
+    const file = this.files[0]; if (!file) return;
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      let w = img.width, h = img.height;
+      if (w > 2000) { h = Math.round(h * 1800 / w); w = 1800; }
+      const oc = document.createElement('canvas'); oc.width = w; oc.height = h;
+      oc.getContext('2d').drawImage(img, 0, 0, w, h);
+      imgOriginal = oc;
+      lienzo = cloneCanvas(oc);
+      listo = true; historial = [];
+      hint.style.display = 'none';
+      render();
+      document.getElementById('gs-st-size').textContent = w + '×' + h + 'px';
+    };
+    img.src = url;
+  });
+
+  window.gsExportarImagen = function () {
+    if (!listo) return;
+    const a = document.createElement('a');
+    a.download = 'glitch-' + Date.now() + '.png';
+    a.href = lienzo.toDataURL('image/png');
+    a.click();
+  };
+
+  window.gsReiniciar = function () {
+    if (!imgOriginal) return;
+    guardarHistorial();
+    lienzo = cloneCanvas(imgOriginal);
+    render();
+  };
+
+  window.gsDeshacer = deshacer;
+
+  function getOffscreen() {
+    const oc = document.createElement('canvas');
+    oc.width = lienzo.width; oc.height = lienzo.height;
+    const ox = oc.getContext('2d');
+    ox.drawImage(lienzo, 0, 0);
+    return { oc, ox };
+  }
+  function commitOffscreen(oc) { guardarHistorial(); lienzo = oc; render(); }
+
+  window.gsTrazoCruz = function () {
+    if (!listo) return;
+    const { oc, ox } = getOffscreen();
+    const id = ox.getImageData(0,0,oc.width,oc.height); const d = id.data;
+    const W = oc.width, H = oc.height;
+    const iter = Math.round(lerp(50, 1000, porcenV / 100));
+    const len = Math.round(lerp(10, 300, porcenH / 100));
+    for (let i = 0; i < iter; i++) {
+      const x = randi(W), y = randi(H);
+      const si = (x + y * W) * 4;
+      const r = d[si], g = d[si+1], b = d[si+2], a = d[si+3];
+      for (let j = -len/2; j < len/2; j++) {
+        const xj = x + j | 0; if (xj >= 0 && xj < W) { const t = (xj + y * W) * 4; d[t]=r; d[t+1]=g; d[t+2]=b; d[t+3]=a; }
+        const yj = y + j | 0; if (yj >= 0 && yj < H) { const t = (x + yj * W) * 4; d[t]=r; d[t+1]=g; d[t+2]=b; d[t+3]=a; }
+      }
+    }
+    ox.putImageData(id, 0, 0); commitOffscreen(oc);
+  };
+
+  window.gsTrazoCirculo = function () {
+    if (!listo) return;
+    const { oc, ox } = getOffscreen();
+    const iter = Math.round(lerp(10, 200, porcenV / 100));
+    const r = Math.round(lerp(5, 150, porcenH / 100));
+    const id = ox.getImageData(0,0,oc.width,oc.height).data;
+    for (let i = 0; i < iter; i++) {
+      const x = randi(oc.width), y = randi(oc.height);
+      const si = (x + y * oc.width) * 4;
+      ox.strokeStyle = `rgb(${id[si]},${id[si+1]},${id[si+2]})`;
+      ox.lineWidth = 2; ox.beginPath(); ox.ellipse(x, y, r, r, 0, 0, Math.PI * 2); ox.stroke();
+    }
+    commitOffscreen(oc);
+  };
+
+  window.gsEcoHorizontal = function () {
+    if (!listo) return;
+    const { oc, ox } = getOffscreen();
+    const id = ox.getImageData(0,0,oc.width,oc.height); const d = id.data;
+    const copia = new Uint8ClampedArray(d);
+    const dist = Math.round(lerp(0, 500, porcenH / 100));
+    const f = porcenV / 100;
+    for (let i = 0; i < d.length; i += 4) {
+      const px = (i / 4) % oc.width;
+      if (px - dist >= 0) {
+        const ei = i - dist * 4;
+        d[i] += (copia[ei] - d[i]) * f;
+        d[i+1] += (copia[ei+1] - d[i+1]) * f;
+        d[i+2] += (copia[ei+2] - d[i+2]) * f;
+      }
+    }
+    ox.putImageData(id, 0, 0); commitOffscreen(oc);
+  };
+
+  window.gsRgbSplit = function () {
+    if (!listo) return;
+    const { oc, ox } = getOffscreen();
+    const id = ox.getImageData(0,0,oc.width,oc.height); const d = id.data;
+    const copia = new Uint8ClampedArray(d);
+    const off = Math.round(lerp(0, 150, porcenH / 100));
+    for (let y = 0; y < oc.height; y++) {
+      for (let x = 0; x < oc.width; x++) {
+        const loc = (x + y * oc.width) * 4;
+        const locR = Math.min(oc.width - 1, x + off) + y * oc.width << 2;
+        const locB = Math.max(0, x - off) + y * oc.width << 2;
+        d[loc] = copia[locR]; d[loc+2] = copia[locB+2];
+      }
+    }
+    ox.putImageData(id, 0, 0); commitOffscreen(oc);
+  };
+
+  window.gsCambiarColor = function () {
+    if (!listo) return;
+    const { oc, ox } = getOffscreen();
+    const id = ox.getImageData(0,0,oc.width,oc.height); const d = id.data;
+    const intensity = lerp(0, 255, porcenH / 100);
+    for (let i = 0; i < d.length; i += 4) {
+      if (Math.random() * 100 < porcenV) {
+        d[i] = (d[i] + intensity) % 256;
+        d[i+2] = (d[i+2] + intensity / 2) % 256;
+      }
+    }
+    ox.putImageData(id, 0, 0); commitOffscreen(oc);
+  };
+
+  window.gsGlitchHorizontal = function () {
+    if (!listo) return;
+    const { oc, ox } = getOffscreen();
+    const h = Math.round(lerp(1, 50, porcenV / 100));
+    const w = Math.round(lerp(10, oc.width, porcenH / 100));
+    for (let i = 0; i < 20; i++) {
+      const x = randi(oc.width), y = randi(oc.height);
+      const dx = Math.round(Math.random() * 100 - 50);
+      ox.drawImage(oc, x, y, w, h, x + dx, y, w, h);
+    }
+    commitOffscreen(oc);
+  };
+
+  window.gsGlitchVertical = function () {
+    if (!listo) return;
+    const { oc, ox } = getOffscreen();
+    const w = Math.round(lerp(1, 50, porcenH / 100));
+    const h = Math.round(lerp(10, oc.height, porcenV / 100));
+    for (let i = 0; i < 20; i++) {
+      const x = randi(oc.width), y = randi(oc.height);
+      const dy = Math.round(Math.random() * 100 - 50);
+      ox.drawImage(oc, x, y, w, h, x, y + dy, w, h);
+    }
+    commitOffscreen(oc);
+  };
+
+  window.gsSortH = function () { if (listo) sorting(true); };
+  window.gsSortV = function () { if (listo) sorting(false); };
+
+  function sorting(horiz) {
+    const { oc, ox } = getOffscreen();
+    const id = ox.getImageData(0,0,oc.width,oc.height); const d = id.data;
+    const W = oc.width, H = oc.height;
+    for (let i = 0; i < (horiz ? H : W); i++) {
+      if (Math.random() * 100 < 50) {
+        if (horiz) sortRow(d, i, W); else sortCol(d, i, W, H);
+      }
+    }
+    ox.putImageData(id, 0, 0); commitOffscreen(oc);
+  }
+
+  function getPixelBrightness(d, idx) {
+    const i = idx * 4; return d[i] * 0.299 + d[i+1] * 0.587 + d[i+2] * 0.114;
+  }
+
+  function sortRow(d, y, W) {
+    let x = 0;
+    while (x < W) {
+      let start = x; while (start < W && getPixelBrightness(d, start + y * W) <= umbralSort / 2) start++;
+      if (start >= W) break;
+      let end = start + 1; while (end < W && getPixelBrightness(d, end + y * W) > umbralSort / 2) end++;
+      const seg = [];
+      for (let i = start; i < end; i++) { const idx = (i + y * W) * 4; seg.push([d[idx], d[idx+1], d[idx+2], d[idx+3]]); }
+      seg.sort((a, b) => (a[0]*0.299+a[1]*0.587+a[2]*0.114) - (b[0]*0.299+b[1]*0.587+b[2]*0.114));
+      for (let i = 0; i < seg.length; i++) { const idx = (start + i + y * W) * 4; d[idx]=seg[i][0]; d[idx+1]=seg[i][1]; d[idx+2]=seg[i][2]; d[idx+3]=seg[i][3]; }
+      x = end;
+    }
+  }
+
+  function sortCol(d, x, W, H) {
+    let y = 0;
+    while (y < H) {
+      let start = y; while (start < H && getPixelBrightness(d, x + start * W) <= umbralSort / 2) start++;
+      if (start >= H) break;
+      let end = start + 1; while (end < H && getPixelBrightness(d, x + end * W) > umbralSort / 2) end++;
+      const seg = [];
+      for (let i = start; i < end; i++) { const idx = (x + i * W) * 4; seg.push([d[idx], d[idx+1], d[idx+2], d[idx+3]]); }
+      seg.sort((a, b) => (a[0]*0.299+a[1]*0.587+a[2]*0.114) - (b[0]*0.299+b[1]*0.587+b[2]*0.114));
+      for (let i = 0; i < seg.length; i++) { const idx = (x + (start + i) * W) * 4; d[idx]=seg[i][0]; d[idx+1]=seg[i][1]; d[idx+2]=seg[i][2]; d[idx+3]=seg[i][3]; }
+      y = end;
+    }
+  }
+
+  // Sliders
+  document.getElementById('gs-sliderH').addEventListener('input', function () {
+    porcenH = +this.value;
+    document.getElementById('gs-valH').textContent = this.value;
+  });
+  document.getElementById('gs-sliderV').addEventListener('input', function () {
+    porcenV = +this.value;
+    document.getElementById('gs-valV').textContent = this.value;
+  });
+  document.getElementById('gs-sliderU').addEventListener('input', function () {
+    umbralSort = +this.value;
+    document.getElementById('gs-valU').textContent = this.value;
+  });
+
+  // Canvas interaction
+  canvas.addEventListener('wheel', e => {
+    e.preventDefault();
+    zoom = Math.min(8, Math.max(0.05, zoom - e.deltaY * 0.001));
+    render();
+  }, { passive: false });
+  canvas.addEventListener('mousedown', e => {
+    moviendo = true;
+    clicX = e.clientX - offsetX;
+    clicY = e.clientY - offsetY;
+  });
+  canvas.addEventListener('mousemove', e => {
+    if (moviendo) { offsetX = e.clientX - clicX; offsetY = e.clientY - clicY; render(); }
+    if (listo) {
+      const rect = canvas.getBoundingClientRect();
+      const mx = (e.clientX - rect.left - offsetX) / zoom + lienzo.width / 2;
+      const my = (e.clientY - rect.top - offsetY) / zoom + lienzo.height / 2;
+      document.getElementById('gs-st-pos').textContent = 'X:' + Math.round(mx) + ' Y:' + Math.round(my);
+    }
+  });
+  window.addEventListener('mouseup', () => moviendo = false);
+
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT') return;
+    const k = e.key.toLowerCase();
+    if (k === 'i') gsImportarImagen();
+    else if (k === 'e') gsExportarImagen();
+    else if (k === 'g') gsReiniciar();
+    else if (k === 'z') gsDeshacer();
+    else if (k === 'k') gsTrazoCruz();
+    else if (k === 'c') gsTrazoCirculo();
+    else if (k === 'h') gsEcoHorizontal();
+    else if (k === 'r') gsRgbSplit();
+    else if (k === 'a') gsGlitchHorizontal();
+    else if (k === 's') gsGlitchVertical();
+    else if (k === 'd') gsCambiarColor();
+    else if (k === 'p') gsSortH();
+    else if (k === 'v') gsSortV();
+  });
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function randi(n) { return Math.floor(Math.random() * n); }
+})();

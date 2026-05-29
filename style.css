@@ -74,6 +74,10 @@
                 color: #20c997 !important; /* menta */
             }
 
+            .parrafo-9 {
+                color: #00ffe0 !important; /* turquesa */
+            }
+
 .glitch { 
     position: relative; 
     color: #ff0088; !important; 
@@ -212,4 +216,177 @@
     transform: translate(-100%,  -80%);
     text-decoration: underline; 
 }
+
+/* ── GLITCH STUDIO ── */
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;700&display=swap');
+
+#glitch-studio-wrapper {
+  display: flex;
+  height: 600px;
+  overflow: hidden;
+  background: #0a0c0e;
+  font-family: 'Share Tech Mono', monospace;
+  color: #c8d6db;
+  border: 1px solid #2a3338;
+  border-radius: 4px;
+  margin-bottom: 2rem;
+}
+
+#glitch-studio-wrapper *, #glitch-studio-wrapper *::before, #glitch-studio-wrapper *::after {
+  box-sizing: border-box;
+}
+
+#gs-sidebar {
+  width: 220px;
+  min-width: 220px;
+  background: #111416;
+  border-right: 1px solid #2a3338;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+#gs-sidebar::-webkit-scrollbar { width: 4px; }
+#gs-sidebar::-webkit-scrollbar-track { background: #111416; }
+#gs-sidebar::-webkit-scrollbar-thumb { background: #4a5a62; border-radius: 2px; }
+
+.gs-sidebar-header {
+  padding: 18px 16px 12px;
+  border-bottom: 1px solid #2a3338;
+}
+
+.gs-sidebar-header h2 {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 3px;
+  color: #00ffe0;
+  text-shadow: 0 0 12px rgba(0,255,224,0.4);
+  margin: 0;
+}
+
+.gs-sidebar-header p {
+  font-size: 9px;
+  color: #4a5a62;
+  letter-spacing: 2px;
+  margin-top: 3px;
+  margin-bottom: 0;
+}
+
+.gs-section {
+  padding: 10px 12px 6px;
+  border-bottom: 1px solid #2a3338;
+}
+
+.gs-section-label {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #4a5a62;
+  margin-bottom: 8px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+}
+
+.gs-btn-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+
+.gs-btn-grid.single { grid-template-columns: 1fr; }
+
+#glitch-studio-wrapper button {
+  background: #1e2528;
+  border: 1px solid #2a3338;
+  color: #c8d6db;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  padding: 7px 6px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: all 0.15s ease;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+  width: 100%;
+}
+
+#glitch-studio-wrapper button:hover { border-color: #00ffe0; color: #00ffe0; }
+#glitch-studio-wrapper button:active { transform: scale(0.97); }
+
+.gs-btn-main {
+  grid-column: 1 / -1;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 2px;
+  padding: 10px;
+  margin-bottom: 4px;
+}
+
+#glitch-studio-wrapper button.gs-primary {
+  background: #0d2420;
+  border-color: #00ffe0;
+  color: #00ffe0;
+}
+#glitch-studio-wrapper button.gs-primary:hover { background: #143028; box-shadow: 0 0 14px rgba(0,255,224,0.2); }
+
+#glitch-studio-wrapper button.gs-warn {
+  background: #1e1900;
+  border-color: #ffe600;
+  color: #ffe600;
+}
+#glitch-studio-wrapper button.gs-warn:hover { background: #2a2400; box-shadow: 0 0 12px rgba(255,230,0,0.15); }
+
+#glitch-studio-wrapper button.gs-danger {
+  background: #1e0d13;
+  border-color: #ff2d6b;
+  color: #ff2d6b;
+  margin-bottom: 0;
+}
+#glitch-studio-wrapper button.gs-danger:hover { background: #2a1020; box-shadow: 0 0 14px rgba(255,45,107,0.2); }
+
+.gs-slider-row { margin-bottom: 10px; }
+.gs-slider-row label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  color: #4a5a62;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.gs-slider-row label span { color: #00ffe0; }
+
+#glitch-studio-wrapper input[type=range] {
+  -webkit-appearance: none; width: 100%; height: 3px;
+  background: #2a3338; outline: none;
+}
+#glitch-studio-wrapper input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 12px; height: 12px;
+  border-radius: 50%; background: #00ffe0; cursor: pointer;
+}
+
+#gs-canvas-area { flex: 1; position: relative; overflow: hidden; background: #0a0c0e; }
+#gs-canvas-area canvas { display: block; }
+
+#gs-drop-hint { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+.gs-border-box { border: 1px dashed #2a3338; padding: 30px; text-align: center; }
+.gs-big { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: 6px; color: #4a5a62; }
+.gs-small { font-size: 10px; letter-spacing: 3px; color: #2a3338; margin-top: 8px; }
+
+#gs-status-bar {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(17,20,22,0.85);
+  border-top: 1px solid #2a3338;
+  padding: 5px 16px;
+  font-size: 9px;
+  color: #4a5a62;
+  display: flex;
+  gap: 20px;
+}
+#gs-status-bar span { color: #00ffe0; }
+#gs-fileInput { display: none; }
 
