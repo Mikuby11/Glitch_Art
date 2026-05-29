@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GLITCH STUDIO</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --panel: #111416;
+    --panel2: #1a1e22;
+    --accent: #00ffe0;
+    --accent2: #ff2d6b;
+    --accent3: #ffe600;
+    --text: #c8d6db;
+    --muted: #4a5a62;
+    --btn: #1e2528;
+    --btn-hover: #2a3338;
+    --border: #2a3338;
+  }
+
+  body {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background: #0a0c0e;
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--text);
+  }
+
+  /* ── PANEL IZQUIERDO ── */
+  #sidebar {
+    width: 220px;
+    min-width: 220px;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    z-index: 10;
+  }
+
+  #sidebar::-webkit-scrollbar { width: 4px; }
+  #sidebar::-webkit-scrollbar-track { background: var(--panel); }
+  #sidebar::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 2px; }
+
+  .sidebar-header {
+    padding: 18px 16px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-header h1 {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-shadow: 0 0 12px rgba(0,255,224,0.4);
+  }
+
+  .sidebar-header p {
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    margin-top: 3px;
+  }
+
+  .section {
+    padding: 10px 12px 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-label {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+  }
+
+  .btn-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+  }
+
+  .btn-grid.single { grid-template-columns: 1fr; }
+
+  button {
+    background: var(--btn);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    padding: 7px 6px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.15s ease;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  button:hover { border-color: var(--accent); color: var(--accent); }
+  button:active { transform: scale(0.97); }
+
+  /* ESTILO UNIFICADO PARA LOS BOTONES PRINCIPALES ABAJO E IMPORTAR */
+  .btn-main {
+    grid-column: 1 / -1;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding: 10px;
+    margin-bottom: 4px;
+  }
+
+  button.primary {
+    background: #0d2420;
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  button.primary:hover { background: #143028; box-shadow: 0 0 14px rgba(0,255,224,0.2); }
+
+  button.warn {
+    background: #1e1900;
+    border-color: var(--accent3);
+    color: var(--accent3);
+  }
+  button.warn:hover { background: #2a2400; box-shadow: 0 0 12px rgba(255,230,0,0.15); }
+
+  button.danger {
+    background: #1e0d13;
+    border-color: var(--accent2);
+    color: var(--accent2);
+    margin-bottom: 0;
+  }
+  button.danger:hover { background: #2a1020; box-shadow: 0 0 14px rgba(255,45,107,0.2); }
+
+  /* ── SLIDERS ── */
+  .slider-row { margin-bottom: 10px; }
+  .slider-row label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .slider-row label span { color: var(--accent); }
+  input[type=range] { -webkit-appearance: none; width: 100%; height: 3px; background: var(--border); outline: none; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); cursor: pointer; }
+
+  /* ── CANVAS AREA ── */
+  #canvas-area { flex: 1; position: relative; overflow: hidden; background: #0a0c0e; }
+  #canvas-area canvas { display: block; }
+  #drop-hint { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+  .border-box { border: 1px dashed var(--border); padding: 30px; text-align: center; }
+  .big { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: 6px; color: var(--muted); }
+  .small { font-size: 10px; letter-spacing: 3px; color: #2a3338; margin-top: 8px; }
+
+  #status-bar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(17,20,22,0.85);
+    border-top: 1px solid var(--border);
+    padding: 5px 16px;
+    font-size: 9px;
+    color: var(--muted);
+    display: flex;
+    gap: 20px;
+  }
+  #status-bar span { color: var(--accent); }
+  #fileInput { display: none; }
+</style>
+</head>
+<body>
+
+<!-- Se usó el código de glitchology.com/processing/ en el entorno de Processing .Para entender el algoritmo, crear interfaz de Glitch Studio y corregir detalles se ocupó 
+las IAs de Claude, Gemini y Github. Para hacerlo compatible con página web se pidió a la IA Claude que pasara el código original del programa a HTML, ocupando la biblioteca de 
+P5.js (JabaScript) para procesar imagenes y desarrolar el algoritmo de cada herramienta. -->
+
+<input type="file" id="fileInput" accept="image/*">
+
+<div id="sidebar">
+  <div class="sidebar-header">
+    <h1>GLITCH STUDIO</h1>
+    <p>WEB EDITION</p>
+  </div>
+
+  <div class="section">
+    <div class="section-label">// ARCHIVO</div>
+    <div class="btn-grid single">
+      <button class="primary btn-main" onclick="importarImagen()">▲ IMPORTAR <small>(I)</small></button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">// PINCELES</div>
+    <div class="btn-grid">
+      <button onclick="trazoCruz()">CRUZ <small>(K)</small></button>
+      <button onclick="trazoCirculo()">CÍRCULO <small>(C)</small></button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">// EFECTOS</div>
+    <div class="btn-grid single">
+      <button onclick="ecoHorizontal()">ECO HORIZONTAL <small>(H)</small></button>
+      <button onclick="rgbSplit()">RGB SPLIT <small>(R)</small></button>
+      <button onclick="cambiarColor()">CORRUPCIÓN <small>(D)</small></button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">// GLITCH EJES</div>
+    <div class="btn-grid">
+      <button onclick="glitchHorizontal()">EJE X <small>(A)</small></button>
+      <button onclick="glitchVertical()">EJE Y <small>(S)</small></button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">// PIXEL SORTING</div>
+    <div class="btn-grid">
+      <button onclick="sortH()">HORIZ. <small>(P)</small></button>
+      <button onclick="sortV()">VERT. <small>(V)</small></button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">// PARÁMETROS</div>
+    <div class="slider-row">
+      <label>INTENSIDAD X <span id="valH">20</span></label>
+      <input type="range" id="sliderH" min="0" max="100" value="20" oninput="porcenH=+this.value; document.getElementById('valH').textContent=this.value">
+    </div>
+    <div class="slider-row">
+      <label>INTENSIDAD Y <span id="valV">20</span></label>
+      <input type="range" id="sliderV" min="0" max="100" value="20" oninput="porcenV=+this.value; document.getElementById('valV').textContent=this.value">
+    </div>
+    <div class="slider-row">
+      <label>UMBRAL SORT <span id="valU">100</span></label>
+      <input type="range" id="sliderU" min="0" max="510" value="100" oninput="umbralSort=+this.value; document.getElementById('valU').textContent=this.value">
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="btn-grid single">
+      <button class="primary btn-main" onclick="deshacer()">↶ DESHACER <small>(Z)</small></button>
+      <button class="warn btn-main" onclick="reiniciar()">↺ REINICIAR <small>(G)</small></button>
+      <button class="danger btn-main" onclick="exportarImagen()">▼ EXPORTAR <small>(E)</small></button>
+    </div>
+  </div>
+</div>
+
+<div id="canvas-area">
+  <div id="drop-hint">
+    <div class="border-box">
+      <div class="big">SIN IMAGEN</div>
+      <div class="small">IMPORTA UNA IMAGEN PARA EMPEZAR</div>
+    </div>
+  </div>
+  <div id="status-bar">
+    <span id="st-size">—</span>
+    <span id="st-zoom">ZOOM 70%</span>
+    <span id="st-pos">X:— Y:—</span>
+  </div>
+</div>
+
+<script>
+// --- RECUPERACIÓN DE TU LÓGICA ORIGINAL COMPLETA ---
+let imgOriginal = null, lienzo = null, listo = false, historial = [];
+let porcenH = 20, porcenV = 20, umbralSort = 100;
+let zoom = 0.7, offsetX = 0, offsetY = 0;
+let moviendo = false, clicX = 0, clicY = 0;
+
+const area = document.getElementById('canvas-area');
+const hint = document.getElementById('drop-hint');
+const canvas = document.createElement('canvas');
+const ctx = canvas.getContext('2d');
+area.insertBefore(canvas, area.firstChild);
+
+function resizeCanvas() {
+  canvas.width = area.clientWidth;
+  canvas.height = area.clientHeight;
+  render();
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+offsetX = canvas.width / 2; offsetY = canvas.height / 2;
+
+function render() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (!listo || !lienzo) return;
+  ctx.save();
+  ctx.translate(offsetX, offsetY);
+  ctx.scale(zoom, zoom);
+  ctx.drawImage(lienzo, -lienzo.width / 2, -lienzo.height / 2);
+  ctx.restore();
+  document.getElementById('st-zoom').textContent = 'ZOOM ' + Math.round(zoom * 100) + '%';
+}
+
+function guardarHistorial() {
+  if (!lienzo) return;
+  historial.push(cloneCanvas(lienzo));
+  if (historial.length > 20) historial.shift();
+}
+
+function deshacer() {
+  if (historial.length === 0) return;
+  lienzo = historial.pop();
+  render();
+}
+
+function cloneCanvas(src) {
+  const oc = document.createElement('canvas');
+  oc.width = src.width; oc.height = src.height;
+  oc.getContext('2d').drawImage(src, 0, 0);
+  return oc;
+}
+
+function importarImagen() { document.getElementById('fileInput').click(); }
+
+document.getElementById('fileInput').addEventListener('change', function() {
+  const file = this.files[0]; if (!file) return;
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = () => {
+    let w = img.width, h = img.height;
+    if (w > 2000) { h = Math.round(h * 1800 / w); w = 1800; }
+    const oc = document.createElement('canvas'); oc.width = w; oc.height = h;
+    oc.getContext('2d').drawImage(img, 0, 0, w, h);
+    imgOriginal = oc;
+    lienzo = cloneCanvas(oc);
+    listo = true; historial = [];
+    hint.style.display = 'none';
+    render();
+    document.getElementById('st-size').textContent = w + '×' + h + 'px';
+  };
+  img.src = url;
+});
+
+function exportarImagen() {
+  if (!listo) return;
+  const a = document.createElement('a');
+  a.download = 'glitch-' + Date.now() + '.png';
+  a.href = lienzo.toDataURL('image/png');
+  a.click();
+}
+
+function reiniciar() {
+  if (!imgOriginal) return;
+  guardarHistorial();
+  lienzo = cloneCanvas(imgOriginal);
+  render();
+}
+
+// --- UTILIDADES DE PIXELES ORIGINALES ---
+function getOffscreen() {
+  const oc = document.createElement('canvas');
+  oc.width = lienzo.width; oc.height = lienzo.height;
+  const ox = oc.getContext('2d');
+  ox.drawImage(lienzo, 0, 0);
+  return { oc, ox };
+}
+function commitOffscreen(oc) { guardarHistorial(); lienzo = oc; render(); }
+
+// --- TUS EFECTOS ORIGINALES ---
+function trazoCruz() {
+  if (!listo) return;
+  const { oc, ox } = getOffscreen();
+  const id = ox.getImageData(0,0,oc.width,oc.height); const d = id.data;
+  const W = oc.width, H = oc.height;
+  const iter = Math.round(lerp(50, 1000, porcenV / 100));
+  const len = Math.round(lerp(10, 300, porcenH / 100));
+  for (let i = 0; i < iter; i++) {
+    const x = randi(W), y = randi(H);
+    const si = (x + y * W) * 4;
+    const r = d[si], g = d[si+1], b = d[si+2], a = d[si+3];
+    for (let j = -len/2; j < len/2; j++) {
+      const xj = x + j | 0; if (xj >= 0 && xj < W) { const t = (xj + y * W) * 4; d[t]=r; d[t+1]=g; d[t+2]=b; d[t+3]=a; }
+      const yj = y + j | 0; if (yj >= 0 && yj < H) { const t = (x + yj * W) * 4; d[t]=r; d[t+1]=g; d[t+2]=b; d[t+3]=a; }
+    }
+  }
+  ox.putImageData(id, 0, 0); commitOffscreen(oc);
+}
+
+function trazoCirculo() {
+  if (!listo) return;
+  const { oc, ox } = getOffscreen();
+  const iter = Math.round(lerp(10, 200, porcenV / 100));
+  const r = Math.round(lerp(5, 150, porcenH / 100));
+  const id = ox.getImageData(0,0,oc.width,oc.height).data;
+  for (let i = 0; i < iter; i++) {
+    const x = randi(oc.width), y = randi(oc.height);
+    const si = (x + y * oc.width) * 4;
+    ox.strokeStyle = `rgb(${id[si]},${id[si+1]},${id[si+2]})`;
+    ox.lineWidth = 2; ox.beginPath(); ox.ellipse(x, y, r, r, 0, 0, Math.PI * 2); ox.stroke();
+  }
+  commitOffscreen(oc);
+}
+
+function ecoHorizontal() {
+  if (!listo) return;
+  const { oc, ox } = getOffscreen();
+  const id = ox.getImageData(0,0,oc.width,oc.height); const d = id.data;
+  const copia = new Uint8ClampedArray(d);
+  const dist = Math.round(lerp(0, 500, porcenH / 100));
+  const f = porcenV / 100;
+  for (let i = 0; i < d.length; i += 4) {
+    const px = (i / 4) % oc.width;
+    if (px - dist >= 0) {
+      const ei = i - dist * 4;
+      d[i] += (copia[ei] - d[i]) * f;
+      d[i+1] += (copia[ei+1] - d[i+1]) * f;
+      d[i+2] += (copia[ei+2] - d[i+2]) * f;
+    }
+  }
+  ox.putImageData(id, 0, 0); commitOffscreen(oc);
+}
+
+function rgbSplit() {
+  if (!listo) return;
+  const { oc, ox } = getOffscreen();
+  const id = ox.getImageData(0,0,oc.width,oc.height); const d = id.data;
+  const copia = new Uint8ClampedArray(d);
+  const off = Math.round(lerp(0, 150, porcenH / 100));
+  for (let y = 0; y < oc.height; y++) {
+    for (let x = 0; x < oc.width; x++) {
+      const loc = (x + y * oc.width) * 4;
+      const locR = Math.min(oc.width - 1, x + off) + y * oc.width << 2;
+      const locB = Math.max(0, x - off) + y * oc.width << 2;
+      d[loc] = copia[locR]; d[loc+2] = copia[locB+2];
+    }
+  }
+  ox.putImageData(id, 0, 0); commitOffscreen(oc);
+}
+
+function cambiarColor() {
+  if (!listo) return;
+  const { oc, ox } = getOffscreen();
+  const id = ox.getImageData(0,0,oc.width,oc.height); const d = id.data;
+  const intensity = lerp(0, 255, porcenH / 100);
+  for (let i = 0; i < d.length; i += 4) {
+    if (Math.random() * 100 < porcenV) {
+      d[i] = (d[i] + intensity) % 256;
+      d[i+2] = (d[i+2] + intensity / 2) % 256;
+    }
+  }
+  ox.putImageData(id, 0, 0); commitOffscreen(oc);
+}
+
+function glitchHorizontal() {
+  if (!listo) return;
+  const { oc, ox } = getOffscreen();
+  const h = Math.round(lerp(1, 50, porcenV / 100));
+  const w = Math.round(lerp(10, oc.width, porcenH / 100));
+  for (let i = 0; i < 20; i++) {
+    const x = randi(oc.width), y = randi(oc.height);
+    const dx = Math.round(Math.random() * 100 - 50);
+    ox.drawImage(oc, x, y, w, h, x + dx, y, w, h);
+  }
+  commitOffscreen(oc);
+}
+
+function glitchVertical() {
+  if (!listo) return;
+  const { oc, ox } = getOffscreen();
+  const w = Math.round(lerp(1, 50, porcenH / 100));
+  const h = Math.round(lerp(10, oc.height, porcenV / 100));
+  for (let i = 0; i < 20; i++) {
+    const x = randi(oc.width), y = randi(oc.height);
+    const dy = Math.round(Math.random() * 100 - 50);
+    ox.drawImage(oc, x, y, w, h, x, y + dy, w, h);
+  }
+  commitOffscreen(oc);
+}
+
+function sortH() { if (listo) sorting(true); }
+function sortV() { if (listo) sorting(false); }
+
+function sorting(horiz) {
+  const { oc, ox } = getOffscreen();
+  const id = ox.getImageData(0,0,oc.width,oc.height); const d = id.data;
+  const W = oc.width, H = oc.height;
+  for (let i = 0; i < (horiz ? H : W); i++) {
+    if (Math.random() * 100 < 50) {
+      if (horiz) sortRow(d, i, W); else sortCol(d, i, W, H);
+    }
+  }
+  ox.putImageData(id, 0, 0); commitOffscreen(oc);
+}
+
+function getPixelBrightness(d, idx) {
+  const i = idx * 4; return d[i] * 0.299 + d[i+1] * 0.587 + d[i+2] * 0.114;
+}
+
+function sortRow(d, y, W) {
+  let x = 0;
+  while (x < W) {
+    let start = x; while (start < W && getPixelBrightness(d, start + y * W) <= umbralSort / 2) start++;
+    if (start >= W) break;
+    let end = start + 1; while (end < W && getPixelBrightness(d, end + y * W) > umbralSort / 2) end++;
+    const seg = [];
+    for (let i = start; i < end; i++) { const idx = (i + y * W) * 4; seg.push([d[idx], d[idx+1], d[idx+2], d[idx+3]]); }
+    seg.sort((a, b) => (a[0]*0.299+a[1]*0.587+a[2]*0.114) - (b[0]*0.299+b[1]*0.587+b[2]*0.114));
+    for (let i = 0; i < seg.length; i++) { const idx = (start + i + y * W) * 4; d[idx]=seg[i][0]; d[idx+1]=seg[i][1]; d[idx+2]=seg[i][2]; d[idx+3]=seg[i][3]; }
+    x = end;
+  }
+}
+
+function sortCol(d, x, W, H) {
+  let y = 0;
+  while (y < H) {
+    let start = y; while (start < H && getPixelBrightness(d, x + start * W) <= umbralSort / 2) start++;
+    if (start >= H) break;
+    let end = start + 1; while (end < H && getPixelBrightness(d, x + end * W) > umbralSort / 2) end++;
+    const seg = [];
+    for (let i = start; i < end; i++) { const idx = (x + i * W) * 4; seg.push([d[idx], d[idx+1], d[idx+2], d[idx+3]]); }
+    seg.sort((a, b) => (a[0]*0.299+a[1]*0.587+a[2]*0.114) - (b[0]*0.299+b[1]*0.587+b[2]*0.114));
+    for (let i = 0; i < seg.length; i++) { const idx = (x + (start + i) * W) * 4; d[idx]=seg[i][0]; d[idx+1]=seg[i][1]; d[idx+2]=seg[i][2]; d[idx+3]=seg[i][3]; }
+    y = end;
+  }
+}
+
+// --- NAVEGACIÓN Y TECLADO ---
+canvas.addEventListener('wheel', e => { e.preventDefault(); zoom = Math.min(8, Math.max(0.05, zoom - e.deltaY * 0.001)); render(); }, { passive: false });
+canvas.addEventListener('mousedown', e => { moviendo = true; clicX = e.clientX - 220 - offsetX; clicY = e.clientY - offsetY; });
+canvas.addEventListener('mousemove', e => { if (moviendo) { offsetX = e.clientX - 220 - clicX; offsetY = e.clientY - clicY; render(); } });
+window.addEventListener('mouseup', () => moviendo = false);
+
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  const k = e.key.toLowerCase();
+  if (k === 'i') importarImagen(); else if (k === 'e') exportarImagen();
+  else if (k === 'g') reiniciar(); else if (k === 'z') deshacer();
+  else if (k === 'k') trazoCruz(); else if (k === 'c') trazoCirculo();
+  else if (k === 'h') ecoHorizontal(); else if (k === 'r') rgbSplit();
+  else if (k === 'a') glitchHorizontal(); else if (k === 's') glitchVertical();
+  else if (k === 'd') cambiarColor(); else if (k === 'p') sortH(); else if (k === 'v') sortV();
+});
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+function randi(n) { return Math.floor(Math.random() * n); }
+</script>
+</body>
+</html>
